@@ -3,5 +3,4 @@ node_modules
 docs
 .vscode
 lang
-lib
 test
