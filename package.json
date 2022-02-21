@@ -33,7 +33,7 @@
     "dev-fix": "nodemon --exec \"npm run fix && node index.js\"",
     "lint": "eslint --ignore-path .gitignore .",
     "fix": "eslint --fix --ignore-path .gitignore .",
-    "test": "npm run lint && jest test",
+    "test": "jest test",
     "prettier": "npx prettier --write ."
   },
   "engines": {
