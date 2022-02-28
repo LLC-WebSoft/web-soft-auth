@@ -30,11 +30,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon --signal SIGTERM --exec \"node index.js\"",
-    "dev-fix": "nodemon --exec \"npm run fix && node index.js\"",
+    "dev-docker": "docker compose up -d && npm run dev",
     "lint": "eslint --ignore-path .gitignore .",
     "fix": "eslint --fix --ignore-path .gitignore .",
-    "test": "jest test",
-    "prettier": "npx prettier --write ."
+    "test": "jest test"
   },
   "engines": {
     "node": ">=16"
