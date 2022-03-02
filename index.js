@@ -63,6 +63,23 @@ const modules = {
       logout: {
         public: false
       },
+      me: {
+        public: false,
+        result: {
+          required: ['username', 'role', 'createdTime'],
+          properties: {
+            username: {
+              type: 'string'
+            },
+            role: {
+              type: 'string'
+            },
+            createdTime: {
+              type: 'string'
+            }
+          }
+        }
+      },
       changePassword: {
         public: false,
         params: {
