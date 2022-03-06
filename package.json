@@ -1,11 +1,11 @@
 {
-  "name": "web-soft-auth",
+  "name": "web-soft-server",
   "author": {
     "name": "DonVietnam",
     "email": "don.vietnam.js@gmail.com"
   },
   "version": "1.0.0",
-  "description": "Authentication for web-soft projects.",
+  "description": "Server for web-soft-projects.",
   "license": "MIT",
   "keywords": [
     "vietnam",

@@ -1,2 +1,3 @@
-# web-soft-auth
-Authentication for web-soft projects.
+# web-soft-server
+
+Server for web-soft-projects.
