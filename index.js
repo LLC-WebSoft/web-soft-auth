@@ -116,4 +116,4 @@ const modules = {
   }
 };
 
-const server = new Server(modules, { port: 80, host: 'localhost' });
+const server = new Server(modules, { port: 80, host: 'localhost', cors: false });
