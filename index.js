@@ -30,7 +30,8 @@ const modules = {
               type: 'string'
             }
           }
-        }
+        },
+        transport: 'http'
       },
       login: {
         public: true,
@@ -58,10 +59,12 @@ const modules = {
               type: 'string'
             }
           }
-        }
+        },
+        transport: 'http'
       },
       logout: {
-        public: false
+        public: false,
+        transport: 'http'
       },
       me: {
         public: false,
