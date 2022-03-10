@@ -6,11 +6,13 @@ const modules = {
     schema: {
       register: {
         public: true,
+        description: 'Регистрация',
         params: {
           required: ['username', 'password'],
           properties: {
             username: {
-              type: 'string'
+              type: 'string',
+              description: 'Имя пользователя'
             },
             password: {
               type: 'string'
