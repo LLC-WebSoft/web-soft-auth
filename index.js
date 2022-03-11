@@ -1,7 +1,57 @@
 const { Server } = require('./lib/server');
 const { Auth } = require('./lib/auth');
 
+const clients = new Set();
+let counter = 0;
+
+setInterval(async () => {
+  counter++;
+  for (const client of clients) {
+    try {
+      await client.emit('counter/getCounts', { counter });
+    } catch (error) {
+      clients.delete(client);
+    }
+  }
+}, 2000);
+
+class Counter {
+  getCounts(data, client) {
+    clients.add(client);
+  }
+}
+
 const modules = {
+  counter: {
+    schema: {
+      getCounts: {
+        description: 'Получение обновляемого счётчика.',
+        public: true,
+        emit: {
+          description: 'Объект события',
+          required: ['counter', 'proper'],
+          properties: {
+            counter: {
+              type: 'Number',
+              description: 'Счётчик'
+            },
+            proper: {
+              type: 'object',
+              description: 'Ещё одно свойство',
+              required: ['prop1'],
+              properties: {
+                prop1: {
+                  type: 'number',
+                  description: 'Ещё одно свойство внутри!'
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    Module: Counter
+  },
   auth: {
     schema: {
       register: {
