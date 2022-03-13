@@ -27,13 +27,19 @@ test( 'ClientEmit_CallConnectionSendProperData_ConnectionsHasProperConncection',
   expect( send.mock.calls[0][0] ).toEqual( {jsonrpc: '2.0', result: { event: 'test-event', data: { test: 'test' } }} );
 } );
 
-test( 'ClientСheckConnection_ReturnTrue_ConnectionsHasClientsConnection', async () => {
+test( 'ClientСheckConnection_ReturnTrue_ConnectionsHasProperClientsConnection', async () => {
   const client = new Client();
-  connections.set(client, {});
+  connections.set(client, { connection: {} });
   expect(client.checkConnection()).toEqual(true);
 } );
 
 test( 'ClientСheckConnection_ReturnFalse_ConnectionsHasNoClientsConnection', async () => {
   const client = new Client();
+  expect(client.checkConnection()).toEqual(false);
+} );
+
+test( 'ClientСheckConnection_ReturnFalse_ConnectionsHasNotProperClientsConnection', async () => {
+  const client = new Client();
+  connections.set(client, {});
   expect(client.checkConnection()).toEqual(false);
 } );
