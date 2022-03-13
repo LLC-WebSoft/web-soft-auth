@@ -1,66 +1,72 @@
 const { test, expect } = require('@jest/globals');
 const { Auth } = require('../lib/auth');
-const { SecurityUtil } = require('../lib/security-util');
-const { UserService } = require('../lib/user');
-const { SessionService } = require('../lib/session');
+const { security } = require('../lib/security-util');
+const { userService } = require('../lib/user');
 
-jest.mock('../lib/security-util');
-jest.mock('../lib/user');
-jest.mock('../lib/session');
+beforeEach( () => {
+  userService.getByUsername = jest.fn( ( username ) => { return { username, password: 'testPassword' } } );
+  security.validatePassword = jest.fn( ( password ) => { return password === 'testPassword' } );
+  userService.updatePassword = jest.fn( () => {} );
+} );
 
-beforeEach(() => {
-  UserService.mockImplementation( () => {
-    return {
-      getByUsername: jest.fn( () => { return { role: 'user', createdTime: '2000-11-11', hashPassword: 'hashPassword' } } ),
-      updatePassword: jest.fn( () => {} )
-    };
-  } );
-
-  SessionService.mockImplementation( () => {
-    return {
-      restoreSession: jest.fn( () => { return 'testSessionUserName' } ),
-      startSession: jest.fn( () => {} )
-    };
-  } );
-
-  SecurityUtil.mockImplementation( () => {
-    return {
-      validatePassword: jest.fn( ( password ) => { return password === 'testPassword' } ),
-      hashPassword: jest.fn( ( password ) => { return password } )
-    };
-  } );
-})
-
-test('AuthLogin_CallSecurityValidatePassword_UserHasNoSession', async () => {
-  const auth = new Auth( new SessionService(), new UserService() );
-  await auth.login( { username: 'username', password: 'testPassword' }, {}, {} );
-  expect( auth.security.validatePassword.mock.calls.length ).toEqual(1);
+test('AuthLogin_CallUserServiceGetByUsername_UserHasNoSession', async () => {
+  const auth = new Auth();
+  const startSession = jest.fn( () => {} );
+  await auth.login( { username: 'username', password: 'testPassword' }, { session: {}, user: {}, startSession } );
+  expect( userService.getByUsername.mock.calls.length ).toEqual(1);
 });
 
-test('AuthLogin_CallSessionServiceStartSession_CorrectPassword', async () => {
-  const auth = new Auth( new SessionService(), new UserService() );
-  await auth.login( { username: 'username', password: 'testPassword' }, {}, {} );
-  expect( auth.sessionService.startSession.mock.calls.length ).toEqual(1);
+test('AuthLogin_NotCallUserServiceGetByUsername_UserHasSession', async () => {
+  const auth = new Auth();
+  const startSession = jest.fn( () => {} );
+  await auth.login( { username: 'username', password: 'testPassword' }, { session: { username: 'username' }, user: {}, startSession } );
+  expect( userService.getByUsername.mock.calls.length ).toEqual(0);
 });
 
-test('AuthLogin_ThrowError_IncorrectPassword', async () => {
-  const auth = new Auth( new SessionService(), new UserService() );
-  return expect( auth.login( { username: 'username', password: 'incorrectPassword' }, {}, {} ) ).rejects.toThrowError('Authentication failed!');
+test('AuthLogin_CallStartSession_ValidPassword', async () => {
+  const auth = new Auth();
+  const startSession = jest.fn( () => {} );
+  await auth.login( { username: 'username', password: 'testPassword' }, { session: {}, user: {}, startSession } );
+  expect( startSession.mock.calls.length ).toEqual(1);
 });
 
-test('AuthChangePassword_CallSecurityHashPassword_CorrectOldPassword', async () => {
-  const auth = new Auth( new SessionService(), new UserService() );
-  await auth.changePassword( { username: 'username', oldPassword: 'testPassword', newPassword: 'newPassword' } );
-  expect( auth.security.hashPassword.mock.calls.length ).toEqual(1);
+test('AuthLogin_ThrowError_InvalidPassword', async () => {
+  const auth = new Auth();
+  const startSession = jest.fn( () => {} );
+  const promise = auth.login( { username: 'username', password: 'invalidPassword' }, { session: {}, user: {}, startSession } );
+  await expect( promise ).rejects.toThrowError( 'Authentication failed.' );
 });
 
-test('AuthChangePassword_CallSessionServiceUpdatePassword_CorrectOldPassword', async () => {
-  const auth = new Auth( new SessionService(), new UserService() );
-  await auth.changePassword( { username: 'username', oldPassword: 'testPassword', newPassword: 'newPassword' } );
-  expect( auth.userService.updatePassword.mock.calls.length ).toEqual(1);
+test('AuthChangePassword_ThrowError_InvalidPassword', async () => {
+  const auth = new Auth();
+  const startSession = jest.fn( () => {} );
+  const promise = auth.changePassword(
+    {
+      username: 'username',
+      oldPassword: 'invalidPassword',
+      newPassword: 'newPassword'
+    },
+    {
+      session: {},
+      user: {},
+      startSession
+    } );
+  await expect( promise ).rejects.toThrowError( 'Authentication failed.' );
 });
 
-test('AuthChangePassword_ThrowError_IncorrectOldPassword', async () => {
-  const auth = new Auth( new SessionService(), new UserService() );
-  return expect( auth.changePassword( { username: 'username', oldPassword: 'incorrectPassword', newPassword: 'newPassword' } ) ).rejects.toThrowError('Password change failed!');
+test('AuthChangePassword_CallUserServiceUpdatePassword_ValidPassword', async () => {
+  const auth = new Auth();
+  const startSession = jest.fn( () => {} );
+  await auth.changePassword(
+    {
+      username: 'username',
+      oldPassword: 'testPassword',
+      newPassword: 'newPassword'
+    },
+    {
+      session: {},
+      user: {},
+      startSession
+    } );
+  expect( userService.updatePassword.mock.calls.length ).toEqual(1);
 });
