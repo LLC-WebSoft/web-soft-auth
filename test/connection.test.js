@@ -43,3 +43,45 @@ test( 'ClientСheckConnection_ReturnFalse_ConnectionsHasNotProperClientsConnecti
   connections.set(client, {});
   expect(client.checkConnection()).toEqual(false);
 } );
+
+test( 'ClientStartSession_ThrowError_ConnectionsHasNoClientsConnection', async () => {
+  const client = new Client();
+  const promise = client.startSession({});
+  await expect(promise).rejects.toThrowError('Inappropriate transport protocol.');
+} );
+
+test( 'ClientStartSession_ThrowError_ConnectionsHasNoStartUserSessionMethod', async () => {
+  const client = new Client();
+  connections.set(client, {});
+  const promise = client.startSession({});
+  await expect(promise).rejects.toThrowError('Inappropriate transport protocol.');
+} );
+
+test( 'ClientStartSession_CallConnectionStartUserSession_ProperConnectionExists', async () => {
+  const client = new Client();
+  const startUserSession = jest.fn( () => {} );
+  connections.set(client, { startUserSession });
+  await client.startSession({});
+  expect( startUserSession.mock.calls.length ).toEqual(1);
+} );
+
+test( 'ClientDeleteSession_ThrowError_ConnectionsHasNoClientsConnection', async () => {
+  const client = new Client();
+  const promise = client.deleteSession({});
+  await expect(promise).rejects.toThrowError('Inappropriate transport protocol.');
+} );
+
+test( 'ClientDeleteSession_ThrowError_ConnectionsHasNoDeleteUserSessionMethod', async () => {
+  const client = new Client();
+  connections.set(client, {});
+  const promise = client.deleteSession({});
+  await expect(promise).rejects.toThrowError('Inappropriate transport protocol.');
+} );
+
+test( 'ClientDeleteSession_CallConnectionDeleteUserSession_ProperConnectionExists', async () => {
+  const client = new Client();
+  const deleteUserSession = jest.fn( () => {} );
+  connections.set(client, { deleteUserSession });
+  await client.deleteSession({});
+  expect( deleteUserSession.mock.calls.length ).toEqual(1);
+} );
