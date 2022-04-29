@@ -31,8 +31,8 @@
     "start": "node index.js",
     "dev": "nodemon --signal SIGTERM --exec \"node index.js\"",
     "dev-docker": "docker compose up -d && npm run dev",
-    "lint": "eslint --ignore-path .gitignore .",
-    "fix": "eslint --fix --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .eslintignore .",
+    "fix": "eslint --fix --ignore-path .eslintignore .",
     "test": "jest test"
   },
   "engines": {
