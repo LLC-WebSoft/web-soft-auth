@@ -1,6 +1,7 @@
 # web-soft-server
 
 Пакет для создания API серверов на NodeJS. Сервер может использовать два вида транспортных протоколов: WebSocket и HTTP, поддерживает механизм подписок и простю авторизацию/аутентификацию пользователей на основе сессий. Для взаимодействия с сервером используется протокол [JSON-RPC 2.0](https://www.jsonrpc.org/specification).
+Протоколы: HTTP/S, WebSocket.
 <!-- =====
 
 
@@ -140,12 +141,17 @@ npm i web-soft-server
 **index.js**
 
 ```
+const fs = require('fs');
 const { Server, logger } = require('web-soft-server');
 const modules = require('./modules');
 
+const key = fs.readFileSync('private.key');
+const cert = fs.readFileSync('cert.crt');
+
 const start = async () => {
   try {
-    let server = new Server(modules, { host: 'localhost', port: 80, cors: false });
+    const server = new Server({ host: 'localhost', port: 443, cors: false, key, cert, secure: true });
+    server.start(modules);
   } catch (error) {
     logger.fatal(error);
   }
@@ -159,8 +165,8 @@ start();
 
 ```
 class Example {
-  method(data, client) {
-    return "Hello!";
+  method() {
+    return { message: 'Hello from server!' };
   }
 }
 
@@ -175,8 +181,17 @@ module.exports = {
           required: ['param1'],
           properties: {
             param1: {
-              type: 'Number',
+              type: 'number',
               description: 'Param1 is number.'
+            }
+          }
+        },
+        result: {
+          description: 'Value that server must return.',
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string'
             }
           }
         }
@@ -411,8 +426,9 @@ module.exports = {
 | [host] | string | IP адрес. По умолчанию: localhost |
 | [cors] | boolean | True - разрешить запрос из любых источников, иначе запретить. По умолчанию: true |
 | [serverCloseTimeout] | number | Количество миллисекуд, которое сервер ожидает перед принудительным закрытием соединений. По умолчанию: 500 |
-
-
+| [secure] | boolean | Нужно ли использовать защищённое HTTPS соединение. При установке значения true необходимо передать параметры key и cert. По умолчанию: false |
+| [key] | string | Приветный ключ. |
+| [cert] | string | Сертификат. |
 
 ## ServerModule<a name="server.module"></a>
 
