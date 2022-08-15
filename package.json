@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon --signal SIGTERM --exec \"node index.js\"",
+    "dev": "nodemon --signal SIGTERM --exec \"node src/index.js\"",
     "dev-docker": "docker compose up -d && npm run dev",
     "lint": "eslint --ignore-path .eslintignore .",
     "fix": "eslint --fix --ignore-path .eslintignore .",
