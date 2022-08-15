@@ -1,6 +1,6 @@
 class Example {
   method() {
-    return 'Hello!';
+    return { message: 'Hello from server!' };
   }
 }
 
@@ -15,8 +15,17 @@ module.exports = {
           required: ['param1'],
           properties: {
             param1: {
-              type: 'Number',
+              type: 'number',
               description: 'Param1 is number.'
+            }
+          }
+        },
+        result: {
+          description: 'Value that server must return.',
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string'
             }
           }
         }
