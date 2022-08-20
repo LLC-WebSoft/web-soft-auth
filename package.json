@@ -30,7 +30,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon --signal SIGTERM --exec \"node src/index.js\"",
-    "dev-docker": "docker compose up -d && npm run dev",
+    "dev-docker": "docker volume create pgdata && docker compose up -d && npm run dev",
     "certs": "bash ./certs.sh",
     "lint": "eslint --ignore-path .eslintignore .",
     "fix": "eslint --fix --ignore-path .eslintignore .",
