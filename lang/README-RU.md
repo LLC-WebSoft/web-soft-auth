@@ -64,6 +64,8 @@
     - [database.select(table[[[[, fields], conditions], orderFields], itemsOnPage, page])](#database.select)
     - [database.update(table, delta, conditions[, returning])](d#atabase.update)
     - [database.delete(table, conditions[, returning])](#database.delete)
+- [Функции](#functions)
+  - [registerError(label, code, [message])](#functions.registerError)
 - [Интерфейсы](#interfaces)
   - [ServerConfig](#server.config)
   - [ServerModule](#server.module)
@@ -85,6 +87,9 @@
     - [auth.logout(data, client)](#auth.logout)
     - [auth.me(data, client)](#auth.me)
     - [auth.changePassword({username, oldPassword, newPassword}, client)](#auth.changePassword)
+  - [Introspection](#introspection)
+    - [introspection.getModules()](#introspection.getModules)
+    - [introspection.getErrors()](#introspection.getErrors)
 <!-- =====
 
 
@@ -407,6 +412,24 @@ module.exports = {
 
 
 
+---FUNCTIONS---
+
+
+
+
+
+===== -->
+# Функции<a name="functions"></a>
+
+## registerError(label: string, code: number, [message: string]): { code: number; message: string } <a name="functions.registerError"></a>
+
+Добавляет новый тип ошибки в словарь ошибок используемых сервером. Регистрировать новый тип ошибки необходимо, если клиент использует метод [getErrors()](#introspection.getErrors) стандартного модуля [Introspection](#introspection). 
+<!-- =====
+
+
+
+
+
 ---INTERFACES---
 
 
@@ -616,3 +639,20 @@ module.exports = {
 ### auth.changePassword({ username: string, oldPassword: string, newPassword: string }, client: [Client](#client)): Promise<{username: string, role: string, createdTime: string}><a name="auth.changePassword"></a>
 
 Смена пароля пользователя.
+
+
+
+## Introspection<a name="introspection"></a>
+
+Модуль предоставляет функции для получения схемы API сервера, а также списка ошибок, встроенных в пакет и зарегистрированных пользователем. Основное назначение модуля - генерация API вызовов на стороне клиента, примером является пакет [web-soft-client](https://github.com/web-soft-llc/web-soft-client).
+
+### introspection.getModules() : { [name: string]: [ServerModule](#server.module) }<a name="introspection.getModules"></a>
+
+Возвращает схему API сервера.
+
+### introspection.getErrors() : { [label: string]: {code: number, message: string} }<a name="introspection.getErrors"></a>
+
+Возвращает словарь, содержащий типы ошибок, используемых сервером.
+- label - сокращённое наименование ошибки
+- code - код ошибки
+- message - сообщение ошибки
