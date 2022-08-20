@@ -1,5 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
+export function registerError(label: string, code: number, message?: string): { code: number; message: string };
+
 export interface ServerConfig {
   port?: number;
   host?: string;
