@@ -4,22 +4,28 @@
     "name": "DonVietnam",
     "email": "don.vietnam.js@gmail.com"
   },
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Server for web-soft-projects.",
   "license": "MIT",
   "keywords": [
+    "https",
+    "http",
+    "ws",
+    "ssl",
+    "api",
+    "jsonrpc 2.0",
     "vietnam",
     "nodejs"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/LLC-WebSoft/web-soft-auth"
+    "url": "https://github.com/web-soft-llc/web-soft-server"
   },
   "bugs": {
-    "url": "https://github.com/LLC-WebSoft/web-soft-auth/issues",
+    "url": "https://github.com/web-soft-llc/web-soft-server/issues",
     "email": "don.vietnam.js@gmail.com"
   },
-  "homepage": "https://github.com/LLC-WebSoft/web-soft-auth",
+  "homepage": "https://github.com/web-soft-llc/web-soft-server",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
