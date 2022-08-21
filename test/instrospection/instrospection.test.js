@@ -7,10 +7,18 @@ test('IntrospectionGetModules_ReturnObjectWithSchemas_ModulesPassed', async () =
   const result = {
     introspection: {
       getModules: {
-        description: 'Возвращает схему API сервера.',
+        description: 'Return server api schema.',
         public: true,
         result: {
-          description: 'Объект со схемой API.',
+          description: 'Object with api schema.',
+          additionalProperties: true
+        }
+      },
+      getErrors: {
+        description: 'Return error dictionary from server.',
+        public: true,
+        result: {
+          description: 'Dictionary of server possible errors.',
           additionalProperties: true
         }
       }
