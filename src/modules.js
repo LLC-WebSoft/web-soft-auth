@@ -11,7 +11,6 @@ module.exports = {
       method: {
         description: 'Test method for example.',
         public: true,
-        transport: 'http',
         params: {
           description: 'Params for test method.',
           required: ['param1'],
