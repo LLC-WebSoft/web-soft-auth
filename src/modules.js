@@ -1,5 +1,6 @@
 class Example {
-  method() {
+  method({ param1 }, client) {
+    console.log(client.user);
     return { message: 'Hello from server!' };
   }
 }
@@ -10,6 +11,7 @@ module.exports = {
       method: {
         description: 'Test method for example.',
         public: true,
+        transport: 'http',
         params: {
           description: 'Params for test method.',
           required: ['param1'],

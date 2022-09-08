@@ -1,7 +1,7 @@
 CREATE EXTENSION "pgcrypto";
 
 CREATE TABLE "SystemSettings" (
-    "name" varchar(128) NOT NULL,
+    "name" varchar(32) NOT NULL,
     "timezone" varchar(64) NOT NULL DEFAULT 'Asia/Novosibirsk'
 );
 ALTER TABLE "SystemSettings" ADD CONSTRAINT "pkSystemSettings" PRIMARY KEY ( "name" );
@@ -11,7 +11,7 @@ SELECT CURRENT_TIMESTAMP AT TIME ZONE ( SELECT "timezone" FROM "SystemSettings" 
 $$;
 
 CREATE TABLE "SystemUser"(
-  "username"  varchar( 128 ) NOT NULL,
+  "username"  varchar( 32 ) NOT NULL,
   "password" varchar( 255 ) NOT NULL,
   "role" varchar( 32 ) NOT NULL,
   "createdTime" timestamp(2) DEFAULT CURRENT_SYSTEM_TIME()
@@ -19,8 +19,8 @@ CREATE TABLE "SystemUser"(
 ALTER TABLE "SystemUser" ADD CONSTRAINT "pkSystemUser" PRIMARY KEY ( "username" );
 
 CREATE TABLE "Session"(
-  "username"  varchar( 128 ) NOT NULL,
-  "token" varchar( 64 ) NOT NULL,
+  "token" uuid NOT NULL,
+  "username"  varchar( 32 ) NOT NULL,
   "createdTime" timestamp(2) DEFAULT CURRENT_SYSTEM_TIME()
 );
 ALTER TABLE "Session" ADD CONSTRAINT "pkSession" PRIMARY KEY ( "token" );
