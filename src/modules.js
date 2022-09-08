@@ -1,5 +1,5 @@
 class Example {
-  method({ param1 }, client) {
+  method(data, client) {
     console.log(client.user);
     return { message: 'Hello from server!' };
   }
