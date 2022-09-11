@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.1] - 2022-09-08
 
+### Added
+
+- Integration tests for Auth module.
+
+### Changed
+
+- Fix bug when Auth.login method crashed when no user found in database.
+- Fix bug when user could change password for every another user with Auth.changePassword method.
+- Set minimum username length to 2 and minimum password length to 8 in Auth module.
+- Split tests into Unit and Integration tests.
+
+## [2.0.1] - 2022-09-08
+
 ### Changed
 
 - Fix bug when SessionService.restoreSession method pass empty token to database.
@@ -68,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Logger service.
 - Introspection module.
 
-[unreleased]: https://github.com/web-soft-llc/web-soft-server/compare/v2.0.1...master
+[unreleased]: https://github.com/web-soft-llc/web-soft-server/compare/v2.0.2...master
+[2.0.2]: https://github.com/web-soft-llc/web-soft-server/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/web-soft-llc/web-soft-server/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/web-soft-llc/web-soft-server/compare/v.1.0.2...v2.0.0
 [1.0.2]: https://github.com/web-soft-llc/web-soft-server/compare/v.1.0.1...v.1.0.2

@@ -5,6 +5,14 @@ on:
       - opened
       - edited
       - reopened
+      - closed
+      - synchronize
+      - converted_to_draft
+      - ready_for_review
+      - locked
+      - unlocked
+      - review_requested
+      - review_request
     branches: [ master ]
   workflow_dispatch:
 jobs:
@@ -20,3 +28,9 @@ jobs:
         run: npm i
       - run: npm run lint
       - run: npm run test
+      - run: npm run docker
+      - run: npm install -g forever
+      - run: PGHOST=localhost PGUSER=test_user PGDATABASE=test_db PGPASSWORD=test_password PGPORT=5432 forever start ./src/index.js
+      - run: docker ps -a
+      - run: npm run integration
+      - run: forever stopall

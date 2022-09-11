@@ -4,7 +4,7 @@
     "name": "DonVietnam",
     "email": "don.vietnam.js@gmail.com"
   },
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Server for web-soft-projects.",
   "license": "MIT",
   "keywords": [
@@ -37,16 +37,19 @@
     "start": "node index.js",
     "dev": "nodemon --signal SIGTERM --exec \"node src/index.js\"",
     "dev-docker": "docker volume create pgdata && docker compose up -d && npm run dev",
+    "docker": "docker volume create pgdata && docker compose up -d",
     "certs": "bash ./certs.sh",
     "lint": "eslint --ignore-path .eslintignore .",
     "fix": "eslint --fix --ignore-path .eslintignore .",
-    "test": "jest test"
+    "test": "jest test/unit",
+    "integration": "cross-env PGHOST=localhost PGUSER=test_user PGDATABASE=test_db PGPASSWORD=test_password PGPORT=5432 HOST=localhost PORT=8000 jest test/integration"
   },
   "engines": {
     "node": ">=16"
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
+    "cross-env": "^7.0.3",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.3.1",
