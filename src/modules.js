@@ -18,6 +18,10 @@ module.exports = {
             param1: {
               type: 'number',
               description: 'Param1 is number.'
+            },
+            param2: {
+              type: 'string',
+              description: 'Param2 is string.'
             }
           }
         },

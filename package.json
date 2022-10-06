@@ -36,13 +36,14 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon --signal SIGTERM --exec \"node src/index.js\"",
-    "dev-docker": "docker volume create pgdata && docker compose up -d && npm run dev",
+    "docker-dev": "npm run docker && npm run dev",
     "docker": "docker volume create pgdata && docker compose up -d",
     "certs": "bash ./certs.sh",
     "lint": "eslint --ignore-path .eslintignore .",
     "fix": "eslint --fix --ignore-path .eslintignore .",
-    "test": "jest test/unit",
-    "integration": "cross-env PGHOST=localhost PGUSER=test_user PGDATABASE=test_db PGPASSWORD=test_password PGPORT=5432 HOST=localhost PORT=8000 jest test/integration"
+    "unit": "jest test/unit -i --passWithNoTests",
+    "integration": "cross-env PGHOST=localhost PGUSER=test_user PGDATABASE=test_db PGPASSWORD=test_password PGPORT=5432 HOST=localhost PORT=8000 jest test/integration -i --passWithNoTests",
+    "test": "npm run unit && npm run integration"
   },
   "engines": {
     "node": ">=16"
@@ -60,6 +61,7 @@
   "dependencies": {
     "ajv": "^8.10.0",
     "pg": "^8.7.3",
-    "ws": "^8.5.0"
+    "ws": "^8.5.0",
+    "xss": "^1.0.14"
   }
 }

@@ -5,7 +5,6 @@ on:
       - opened
       - edited
       - reopened
-      - closed
       - synchronize
       - converted_to_draft
       - ready_for_review
@@ -13,7 +12,7 @@ on:
       - unlocked
       - review_requested
       - review_request
-    branches: [ master ]
+    branches: [develop]
   workflow_dispatch:
 jobs:
   test-and-lint:
@@ -26,11 +25,15 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         run: npm i
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run docker
-      - run: npm install -g forever
-      - run: PGHOST=localhost PGUSER=test_user PGDATABASE=test_db PGPASSWORD=test_password PGPORT=5432 forever start ./src/index.js
-      - run: docker ps -a
-      - run: npm run integration
-      - run: forever stopall
+      - name: Linter
+        run: npm run lint
+      - name: Start database container
+        run: npm run docker
+      - name: Install forever for starting server
+        run: npm install -g forever
+      - name: Start server
+        run: PGHOST=localhost PGUSER=test_user PGDATABASE=test_db PGPASSWORD=test_password PGPORT=5432 forever start ./src/index.js
+      - name: Run tests
+        run: npm run test
+      - name: Stop server
+        run: forever stopall

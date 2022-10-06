@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [Unreleased] -->
 
-## [2.0.1] - 2022-09-08
+### Added
+
+- Sanitizer class to prevent an XSS attack using an xss package.
+- A global instance of Sanitizer class.
+- Limit on the size of the request body.
+- MAX_PAYLOAD_SIZE_EXCEEDED and BODY_RECIEVE_ERROR error codes.
+
+### Removed
+
+- The authentication module is extracted into its own package.
+
+## [2.0.2] - 2022-09-11
 
 ### Added
 

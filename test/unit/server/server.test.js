@@ -43,42 +43,9 @@ test('ServerStart_CallConnectionSetCors_ServerCorsIsFalse', async () => {
   expect(connection.setCors.mock.calls[0][0]).toEqual(false);
 });
 
-test('ServerStart_CallConnectionOptions_RequestMethodIsOPTIONS', async () => {
-  const connection = createFakeConnection('OPTIONS');
-  const server = createServer({}, connection);
-  server.start();
-  await server.server.emitRequest();
-  expect(connection.options.mock.calls.length).toEqual(1);
-});
-
-test('ServerStart_CallConnectionMessage_RequestMethodIsPOST', async () => {
-  const connection = createFakeConnection();
-  const server = createServer({}, connection);
-  server.start();
-  await server.server.emitRequest();
-  expect(connection.message.mock.calls.length).toEqual(1);
-});
-
-test('ServerStart_CallConnectionInitialise_RequestMethodIsPOST', async () => {
-  const connection = createFakeConnection();
-  const server = createServer({}, connection);
-  server.start();
-  await server.server.emitRequest();
-  expect(connection.initialise.mock.calls.length).toEqual(1);
-});
-
-test('ServerStart_CallConnectionError_InvalidHttpMethod', async () => {
-  const connection = createFakeConnection('GET');
-  const server = createServer({}, connection);
-  server.start();
-  await server.server.emitRequest();
-  expect(connection.error.mock.calls.length).toEqual(1);
-  expect(connection.error.mock.calls[0][0]).toBeInstanceOf(Error);
-});
-
 test('ServerStart_ThrowError_ErrorPassIsNotTrue', async () => {
   const connection = createFakeConnection();
-  connection.message = () => {
+  connection.serveRequest = () => {
     throw new Error('test-error');
   };
   const server = createServer({}, connection);

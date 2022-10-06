@@ -86,6 +86,7 @@ const createFakeConnection = (method = 'POST') => {
   result.setCors = jest.fn();
   result.options = jest.fn();
   result.request = createStubRequest(method);
+  result.serveRequest = jest.fn();
   connections.set(1, result);
   return result;
 };
