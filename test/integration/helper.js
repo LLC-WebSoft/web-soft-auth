@@ -76,7 +76,7 @@ const request = (data, hostname, port) =>
       },
       (response) => {
         let data = '';
-        cookies = parseCookies(response.headers['set-cookie'] || []);
+        cookies += parseCookies(response.headers['set-cookie'] || []);
         response.on('data', (chunk) => {
           data += chunk;
         });
@@ -89,8 +89,7 @@ const request = (data, hostname, port) =>
     request.on('error', (error) => {
       reject(error);
     });
-    request.write(data);
-    request.end();
+    request.end(data);
   });
 
 const call = async (method, params) => {
@@ -101,7 +100,7 @@ const call = async (method, params) => {
 
 const auth = async (role) => {
   const user = {
-    username: 'test_user',
+    username: '89876543210',
     password:
       '$scrypt$N=32768,r=8,p=1,maxmem=67108864$WDvlWv547xK6YjokhmlArebEs92/Ug+a8GtU2b+ER84$11RTxyQMbuyft3XJ7nethkvNALfSREfemmr0phYAvam8MC4qp0lSAe91DDmZC2FufT0RKTo18p8do+jj+M8oMw',
     role
@@ -109,7 +108,7 @@ const auth = async (role) => {
 
   const session = {
     token: '409715e3-9c5e-474a-8070-884b23ac3a6a',
-    username: 'test_user'
+    username: '89876543210'
   };
 
   clearCookies();

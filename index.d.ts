@@ -1,12 +1,14 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-export function registerError(label: string, code: number, message?: string): { code: number; message: string };
-
 export interface ServerConfig {
   port?: number;
   host?: string;
   cors?: boolean;
   serverCloseTimeout?: number;
+  secure: boolean;
+  key: string | null;
+  cert: string | null;
+  maxPayload: number;
 }
 
 export interface MethodDataSchema {
@@ -80,51 +82,16 @@ export interface DatabaseData {
   [key: string]: number | string | boolean;
 }
 
-export class Server {
-  constructor(config?: ServerConfig);
-  start(modules: { [name: string]: ServerModule }): void;
-  close(): void;
+export declare class Validator {
+  constructor();
+  compile(schema: MethodDataSchema): (data: any) => boolean;
 }
 
-export class ConnectionError extends Error {
-  constructor(meta: ErrorMetaData, data: any);
-  code?: number;
-  data?: any;
-  internal?: string;
-  pass: boolean;
-}
-
-export declare namespace validator {
-  function compile(schema: MethodDataSchema): (data: any) => boolean;
-}
-
-export declare namespace userService {
-  function save(username: string, hashPassword: string): Promise<UserRole>;
-  function getByUsername(username: string): Promise<User>;
-  function updatePassword(username: string, password: string): Promise<UserRole>;
-}
-
-export declare namespace sessionService {
-  function restoreSession(request: IncomingMessage): Promise<Session>;
-  function startSession(request: IncomingMessage, response: ServerResponse, username: string): Promise<Session>;
-  function endSession(request: IncomingMessage, response: ServerResponse): Promise<Session>;
-}
-
-export declare namespace logger {
-  function setSettings(settings: LoggerSettings): void;
-  function setTransport(transport: LoggerTransport): void;
-  function info(...data: any[]): void;
-  function debug(...data: any[]): void;
-  function warn(...data: any[]): void;
-  function sql(...data: any[]): void;
-  function error(error: Error): void;
-  function fatal(error: Error): void;
-}
-
-export declare namespace database {
-  function query(text: string, params: Array<any>): Promise<any[]>;
-  function insert(table: string, data: DatabaseData, returning: Array<string>): Promise<any>;
-  function select(
+export declare class Database {
+  constructor();
+  query(text: string, params: Array<any>): Promise<any[]>;
+  insert(table: string, data: DatabaseData, returning: Array<string>): Promise<any>;
+  select(
     table: string,
     fields: Array<string>,
     conditions: DatabaseData,
@@ -132,12 +99,79 @@ export declare namespace database {
     itemsOnPage: number,
     page: number
   ): Promise<any[]>;
-  function update(
-    table: string,
-    delta: DatabaseData,
-    conditions: DatabaseData,
-    returning: Array<string>
-  ): Promise<any[]>;
-  function _delete(table: string, conditions: DatabaseData, returning: Array<string>): Promise<any[]>;
-  export { _delete as delete, query, insert, select, update };
+  update(table: string, delta: DatabaseData, conditions: DatabaseData, returning: Array<string>): Promise<any[]>;
+  delete(table: string, conditions: DatabaseData, returning: Array<string>): Promise<any[]>;
 }
+
+declare class UserRepository {
+  constructor();
+  save(user: User, db: Database): Promise<User>;
+  get(username: string, db: Database): Promise<User>;
+  update(username: string, db: Database): Promise<User>;
+}
+
+export declare class UserService {
+  constructor();
+  userRepository: UserRepository;
+  save(username: string, hashPassword: string): Promise<UserRole>;
+  getByUsername(username: string): Promise<User>;
+  updatePassword(username: string, password: string): Promise<UserRole>;
+}
+
+declare class SessionRepository {
+  constructor();
+  save(session: Session, db: Database): Promise<Session>;
+  delete(token: string, db: Database): Promise<Session>;
+  restore(token: string, db: Database): Promise<Session>;
+}
+
+export declare class SessionService {
+  constructor();
+  sessionRepository: SessionRepository;
+  restoreSession(request: IncomingMessage): Promise<Session>;
+  startSession(request: IncomingMessage, response: ServerResponse, username: string): Promise<Session>;
+  endSession(request: IncomingMessage, response: ServerResponse): Promise<Session>;
+}
+
+export declare class Logger {
+  constructor();
+  transport: LoggerTransport;
+  settings: LoggerSettings;
+  setSettings(settings: LoggerSettings): void;
+  setTransport(transport: LoggerTransport): void;
+  info(...data: any[]): void;
+  debug(...data: any[]): void;
+  warn(...data: any[]): void;
+  sql(...data: any[]): void;
+  error(error: Error): void;
+  fatal(error: Error): void;
+}
+
+export declare class Server {
+  constructor(config?: ServerConfig);
+  start(modules: { [name: string]: ServerModule }): void;
+  close(): Promise<Server>;
+}
+
+export declare class ConnectionError extends Error {
+  constructor(meta: ErrorMetaData, data: any);
+  code?: number;
+  data?: any;
+  internal?: string;
+  pass: boolean;
+}
+
+export declare class Sanitizer {
+  constructor();
+  setFilter(filter: (data: string) => string): void;
+  sanitize(data: string): string;
+}
+
+export function registerError(label: string, code: number, message?: string): { code: number; message: string };
+
+export const validator: Validator;
+export const userService: UserService;
+export const database: Database;
+export const sessionService: SessionService;
+export const logger: Logger;
+export const sanitizer: Sanitizer;
