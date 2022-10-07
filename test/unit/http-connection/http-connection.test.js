@@ -1,5 +1,5 @@
 const { test, expect } = require('@jest/globals');
-const { createConnection, HEADERS, createFakeRequest, createFakeResponse } = require('./prepare');
+const { createConnection, createFakeRequest, createFakeResponse } = require('./prepare');
 
 test('HTTPConnection_HangListener_OnInitialisation', async () => {
   const connection = createConnection();
@@ -23,39 +23,30 @@ test('HTTPConnectionGetHeaders_ChangeAccessControlAllowOriginHeader_CorsIsDisabl
   const request = createFakeRequest('test-origin');
   const connection = createConnection(request);
   connection.setCors(false);
-  expect(connection.getHeaders()).toEqual({
-    ...HEADERS,
-    'Access-Control-Allow-Origin': 'test-origin'
-  });
-});
-
-test('HTTPConnectionGetHeaders_NotChangeAccessControlAllowOriginHeader_CorsIsDisableAndOriginNotProvided', async () => {
-  const connection = createConnection();
-  connection.setCors(false);
-  expect(connection.getHeaders()).toEqual(HEADERS);
-});
-
-test('HTTPConnectionGetHeaders_NotChangeAccessControlAllowOriginHeader_CorsIsEnable', async () => {
-  const connection = createConnection();
-  expect(connection.getHeaders()).toEqual(HEADERS);
+  expect(connection.getHeaders()).toEqual(
+    expect.objectContaining({
+      'Access-Control-Allow-Origin': 'test-origin'
+    })
+  );
 });
 
 test('HTTPConnectionGetHeaders_AddContentTypeHeader_ContentTypeProvided', async () => {
   const connection = createConnection();
-  expect(connection.getHeaders('type')).toEqual({
-    ...HEADERS,
-    'Content-Type': 'type'
-  });
+  expect(connection.getHeaders('type')).toEqual(
+    expect.objectContaining({
+      'Content-Type': 'type'
+    })
+  );
 });
 
 test('HTTPConnectionGetHeaders_NotAddContentTypeHeader_ContentTypeIsNotProvided', async () => {
   const connection = createConnection();
-  expect(connection.getHeaders()).toEqual(HEADERS);
+  expect(connection.getHeaders()).toEqual(expect.not.objectContaining({ 'Content-Type': expect.any(String) }));
 });
 
 test('HTTPConnectionGetHeaders_NotAddContentTypeHeader_ContentTypeIsEmptyString', async () => {
   const connection = createConnection();
-  expect(connection.getHeaders('')).toEqual(HEADERS);
+  expect(connection.getHeaders('')).toEqual(expect.not.objectContaining({ 'Content-Type': expect.any(String) }));
 });
 
 test('HTTPConnectionWrite_NotCallResponseWriteHead_ResponseWritableEndedIsTrue', async () => {

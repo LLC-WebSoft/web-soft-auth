@@ -1,14 +1,5 @@
 const { HTTPConnectionFactory } = require('../../../lib/http-connection');
 
-const HEADERS = {
-  'X-XSS-Protection': '1; mode=block',
-  'X-Content-Type-Options': 'nosniff',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Credentials': 'true'
-};
-
 const createFakeRequest = (origin = '') => {
   const result = {};
   result.headers = {};
@@ -36,7 +27,6 @@ const createConnection = (request, modules = {}, response) => {
 
 module.exports = {
   createConnection,
-  HEADERS,
   createFakeRequest,
   createFakeResponse
 };

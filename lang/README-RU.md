@@ -173,12 +173,13 @@ module.exports = {
 - `config` <[object](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82%D1%8B)> Объект с параметрами сервера:
   - `port` <[number](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%87%D0%B8%D1%81%D0%BB%D0%B0)> Порт для прослушивания сервером. **По умолчанию:** 80
   - `host` <[string](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B5_%D1%81%D1%82%D1%80%D0%BE%D0%BA%D0%B8)> IP адрес. **По умолчанию:** localhost
-  - `cors` <[boolean](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D0%B1%D1%83%D0%BB%D0%B5%D0%B2%D1%8B%D0%B9_%D1%82%D0%B8%D0%BF_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)> True - разрешить запрос из любых источников, иначе запретить. **По умолчанию:** true
+  - `cors` <[boolean](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D0%B1%D1%83%D0%BB%D0%B5%D0%B2%D1%8B%D0%B9_%D1%82%D0%B8%D0%BF_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)> True - запретить запрос из любых источников, иначе разрешить. **По умолчанию:** true
   - `serverCloseTimeout` <[number](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%87%D0%B8%D1%81%D0%BB%D0%B0)> Количество миллисекуд, которое сервер ожидает перед принудительным закрытием соединений. **По умолчанию:** 500
   - `secure` <[boolean](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D0%B1%D1%83%D0%BB%D0%B5%D0%B2%D1%8B%D0%B9_%D1%82%D0%B8%D0%BF_%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)> Нужно ли использовать защищённое HTTPS соединение. При установке значения true необходимо передать параметры key и cert. **По умолчанию:** false
   - `key` <[string](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B5_%D1%81%D1%82%D1%80%D0%BE%D0%BA%D0%B8)> Приветный ключ.
   - `cert` <[string](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B5_%D1%81%D1%82%D1%80%D0%BE%D0%BA%D0%B8)> Сертификат.
   - `maxPayload` <[number](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%87%D0%B8%D1%81%D0%BB%D0%B0)> максимальный размер тела запроса. **По умолчанию:** 1024 байт.
+  - `allowOrigin` <[string](https://developer.mozilla.org/ru/docs/Web/JavaScript/Data_structures#%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B5_%D1%81%D1%82%D1%80%D0%BE%D0%BA%D0%B8)[]> список источников, из которых разрешены запросы серверу, этот параметр не работает, если значение `cors` установлено в `false`. **По умолчанию:** [].
 
 Конструктор класса Server. Принимает оснонвые параметры для создания сервера.
 

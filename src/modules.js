@@ -1,3 +1,4 @@
+'use strict';
 class Example {
   method(data, client) {
     console.log(client.user);

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A global instance of Sanitizer class.
 - Limit on the size of the request body.
 - MAX_PAYLOAD_SIZE_EXCEEDED and BODY_RECIEVE_ERROR error codes.
+- The ability to set a list of allowed sources for requests.
 
 ### Removed
 

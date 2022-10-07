@@ -9,6 +9,7 @@ export interface ServerConfig {
   key: string | null;
   cert: string | null;
   maxPayload: number;
+  allowOrigin: Array<string>;
 }
 
 export interface MethodDataSchema {
