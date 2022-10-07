@@ -5,6 +5,7 @@
 // - NotFound
 
 const transport = require('http');
+const ws = require('ws');
 const { Pool } = require('pg');
 
 const pool = new Pool();
@@ -60,13 +61,51 @@ const parseCookies = (setCookies) => {
   return cookies;
 };
 
-const request = (data, hostname, port) =>
+const getWebSocketTransport = async (origin = '') => {
+  const client = new ws.WebSocket(`ws:${process.env.HOST}:${process.env.PORT}`, { headers: { origin } });
+  return new Promise((resolve, reject) => {
+    client.on('open', () =>
+      resolve((data) => {
+        client.send(data);
+        return new Promise((resolve) => {
+          client.on('error', (error) => {
+            client.close();
+            reject(error);
+          });
+
+          client.on('close', () => {
+            resolve({});
+          });
+
+          client.on('message', (reply) => {
+            client.close();
+            resolve(JSON.parse(reply));
+          });
+        });
+      })
+    );
+    client.on('error', (error) => reject(error));
+  });
+};
+
+const getCaller = async (protocol = 'http', origin) => {
+  const transport = protocol === 'http' ? (data) => request(data, origin) : await getWebSocketTransport(origin);
+
+  return async (method, params) => {
+    const data = { jsonrpc: '2.0', method, params };
+    const { result, error } = await transport(JSON.stringify(data));
+    return result ? result : error ? error : {};
+  };
+};
+
+const request = (data, origin = '') =>
   new Promise((resolve, reject) => {
     const request = transport.request(
       {
-        hostname,
-        port,
+        hostname: process.env.HOST,
+        port: process.env.PORT,
         method: 'POST',
+        origin: origin,
         headers: {
           'Content-Type': 'application/json',
           'Content-Length': data.length,
@@ -92,39 +131,11 @@ const request = (data, hostname, port) =>
     request.end(data);
   });
 
-const call = async (method, params) => {
-  const data = { jsonrpc: '2.0', method, params };
-  const { result, error } = await request(JSON.stringify(data), process.env.HOST, process.env.PORT);
-  return result ? result : error ? error : {};
-};
-
-const auth = async (role) => {
-  const user = {
-    username: '89876543210',
-    password:
-      '$scrypt$N=32768,r=8,p=1,maxmem=67108864$WDvlWv547xK6YjokhmlArebEs92/Ug+a8GtU2b+ER84$11RTxyQMbuyft3XJ7nethkvNALfSREfemmr0phYAvam8MC4qp0lSAe91DDmZC2FufT0RKTo18p8do+jj+M8oMw',
-    role
-  };
-
-  const session = {
-    token: '409715e3-9c5e-474a-8070-884b23ac3a6a',
-    username: '89876543210'
-  };
-
-  clearCookies();
-  setCookie('token', session.token);
-  await addTestData('SystemUser', user);
-  await addTestData('Session', session);
-
-  return { ...user, password: 'test_password' };
-};
-
 module.exports = {
-  call,
+  getCaller,
   clearTables,
   closeDatabaseConnection,
   addTestData,
   clearCookies,
-  setCookie,
-  auth
+  setCookie
 };
